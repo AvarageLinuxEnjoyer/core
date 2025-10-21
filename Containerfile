@@ -1,12 +1,19 @@
-FROM ghcr.io/vanilla-os/core:latest AS vib
+FROM docker.io/krolmiki2011/arch-coreos:latest AS core
 
-FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS cachyos
+FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS base
 
-RUN mkdir /vos
-COPY --from=vib / /vos/
+COPY --from=core /etc /etc
+COPY --from=core /bin /bin
+COPY --from=core /sbin /sbin
+COPY --from=core /usr /usr
+COPY --from=core /lib /lib
+COPY --from=core /lib64 /lib64
 
-RUN ln -s /usr/bin/abroot /usr/bin/
+RUN pacman -Syu --noconfirm
+RUN pacman -Sy --noconfirm plasma
 
-RUN pacman --noconfirm -Syu
-RUN pacman --noconfirm -Sy paru
-RUN paru --noconfirm -Sy linux linux-headers linux-firmware podman distrobox 
+
+
+rm -rf /var/lib/pacman/sync/* && \
+     find /var/cache/pacman/ -type f -delete
+RUN pacman-ostree ostree container commit
