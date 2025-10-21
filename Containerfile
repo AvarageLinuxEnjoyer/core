@@ -7,7 +7,7 @@ RUN sed -i 's@#en_US.UTF-8@en_US.UTF-8@g' /etc/locale.gen
 RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
 
 RUN pacman -Syu --noconfirm && \
-     pacman -S --needed --noconfirm pacman-contrib git openssh sudo curl wget
+    pacman -S --needed --noconfirm pacman-contrib git openssh sudo curl wget
 RUN curl https://raw.githubusercontent.com/CachyOS/docker/master/pacman.conf -o /etc/pacman.conf
 RUN curl https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
 
