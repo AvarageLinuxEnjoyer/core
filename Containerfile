@@ -1,13 +1,15 @@
 FROM docker.io/krolmiki2011/arch-coreos:latest AS core
 
+RUN pacman -Sw
+
 FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS base
 
 COPY --from=core /var/cache/pacman/pkg/ /var/cache/pacman/pkg/
 
-pacman --noconfirm -U /var/cache/pacman/pkg/*
+RUN pacman --noconfirm -U /var/cache/pacman/pkg/*.pkg.tar.zst
 
 RUN pacman -Syu --noconfirm
-RUN pacman -Sy --noconfirm plasma
+RUN pacman -Sy --noconfirm fastfetch # plasma
 
 
 
