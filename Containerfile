@@ -9,7 +9,9 @@ RUN pacman -Syu --noconfirm
 RUN pacman -Rns --noconfirm rustup || true
 RUN pacman -Rns --noconfirm rust || true
 RUN pacman -S --noconfirm base-devel
-RUN pacman -S --noconfirm rustup
+RUN pacman -S --noconfirm rustup cargo
+
+ENV PATH="/root/.cargo/bin:${PATH}"
 
 RUN rustup default stable
 
