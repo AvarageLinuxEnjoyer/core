@@ -25,6 +25,7 @@ RUN useradd -m -s /bin/bash aur && \
 #FROM scratch
 #COPY --from=base / /
 
-LABEL containers.bootc 1
-LABEL ostree.bootable 1
+LABEL containers.bootc="1"
+LABEL ostree.bootable="1"
+
 RUN pacman-ostree ostree container commit
