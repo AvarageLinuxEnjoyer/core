@@ -1,8 +1,8 @@
-FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS cachyos
-
 FROM ghcr.io/vanilla-os/core:latest AS vib
 
-COPY --from=cachyos / /
+FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS cachyos
+
+COPY --from=vib / /
 
 RUN pacman --noconfirm -Syu
 RUN pacman --noconfirm -Sy paru
