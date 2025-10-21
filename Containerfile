@@ -1,7 +1,8 @@
-FROM ghcr.io/vanilla-os/core:latest AS vib
-FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS builder
+FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS cachyos
 
-COPY --from=vib /usr/bin/abroot /usr/bin/
+FROM ghcr.io/vanilla-os/core:latest AS vib
+
+COPY --from=cachyos / /
 
 RUN pacman --noconfirm -Syu
 RUN pacman --noconfirm -Sy paru
