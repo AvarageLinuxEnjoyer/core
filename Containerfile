@@ -4,5 +4,4 @@ FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS builder
 COPY --from=vib /usr/bin/abroot /usr/bin/
 
 RUN pacman -Syu --noconfirm
-RUN pacman -Sy linux linux-headers linux-firmware podman distrobox \
-    && echo "next"
+RUN pacman -Sy linux linux-headers linux-firmware podman distrobox
