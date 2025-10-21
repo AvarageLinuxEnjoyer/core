@@ -9,7 +9,7 @@ COPY --from=core /var/cache/pacman/pkg/ /var/cache/pacman/pkg/
 RUN pacman --noconfirm -U /var/cache/pacman/pkg/*.pkg.tar.zst
 
 RUN pacman -Syu --noconfirm
-RUN pacman -Sy --noconfirm fastfetch # plasma
+RUN pacman -Sy --noconfirm fastfetch linux linux-headers linux-hardware # plasma
 
 
 
