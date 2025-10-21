@@ -5,7 +5,8 @@ FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS cachyos
 RUN mkdir /vos
 COPY --from=vib / /vos/
 
-ln -s /usr/bin/abroot /usr/bin/
+RUN ln -s /usr/bin/abroot /usr/bin/
+
 RUN pacman --noconfirm -Syu
 RUN pacman --noconfirm -Sy paru
 RUN paru --noconfirm -Sy linux linux-headers linux-firmware podman distrobox 
