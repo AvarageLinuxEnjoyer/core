@@ -1,5 +1,29 @@
-FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS base
+FROM ghcr.io/immutablearch/arch-coreos:latest AS base
 
+# Set locale
+RUN sed -i 's@#en_US.UTF-8@en_US.UTF-8@g' /etc/locale.gen
+RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+
+RUN pacman -Syu --noconfirm && \
+     pacman -S --needed --noconfirm pacman-contrib git openssh sudo curl wget
+RUN curl https://raw.githubusercontent.com/CachyOS/docker/master/pacman.conf -o /etc/pacman.conf
+RUN curl https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+
+
+## include to pacman own keyring to install signed packages
+RUN  pacman-key --init && \
+     pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com && \
+     pacman-key --lsign-key F3B607488DB35A47 && \
+     pacman -Sy && \
+	 pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks && \
+	 pacman -Syu --noconfirm && \
+     rm -rf /var/lib/pacman/sync/* && \
+     find /var/cache/pacman/ -type f -delete
+
+RUN curl https://raw.githubusercontent.com/CachyOS/docker/master/pacman-v3.conf -o /etc/pacman.conf
+RUN pacman -Syu --noconfirm && \
+    rm -rf /var/lib/pacman/sync/* && \
+    find /var/cache/pacman/ -type f -delete
 
 
 
