@@ -15,7 +15,7 @@ RUN useradd -m -s /bin/bash aur && \
 
 
 RUN pacman -Syu --noconfirm
-RUN pacman -Sy --noconfirm fastfetch linux linux-headers linux-hardware # plasma
+RUN pacman -Sy --noconfirm fastfetch linux linux-headers linux-firmware # plasma
 
 
 
