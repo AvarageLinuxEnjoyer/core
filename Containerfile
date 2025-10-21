@@ -14,6 +14,6 @@ RUN pacman -Sy --noconfirm plasma
 
 
 
-rm -rf /var/lib/pacman/sync/* && \
-     find /var/cache/pacman/ -type f -delete
+RUN rm -rf /var/lib/pacman/sync/* && \
+    find /var/cache/pacman/ -type f -delete
 RUN pacman-ostree ostree container commit
