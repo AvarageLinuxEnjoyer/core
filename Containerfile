@@ -1,4 +1,6 @@
-FROM krolmiki2011/arch-coreos:latest AS base
+FROM ghcr.io/immutablearch/arch-coreos-kde:latest AS base
+
+RUN pacman -Syu --noconfirm
 
 # Set locale
 RUN sed -i 's@#en_US.UTF-8@en_US.UTF-8@g' /etc/locale.gen
