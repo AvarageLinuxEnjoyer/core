@@ -1,13 +1,17 @@
 FROM cachyos/cachyos-v3:latest AS base
 
+ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
+
 #RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
 
 RUN pacman -Syu --noconfirm
 
-RUN pacman -Rns --noconfirm rustup || true \
- && pacman -S --noconfirm rust cargo
+RUN pacman -Rns --noconfirm rustup || true
+RUN pacman -Rns --noconfirm rust || true
+RUN pacman -S --noconfirm base-devel
+RUN pacman -S --noconfirm rustup
 
-ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
+RUN rustup default stable
 
 RUN useradd -m -s /bin/bash aur && \
     echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
