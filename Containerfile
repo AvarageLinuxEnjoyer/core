@@ -9,9 +9,8 @@ RUN pacman -Sy --noconfirm ostree grub-efi bootc-git bootupd-git shim-fedora pac
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
 
-FROM scratch
-
-COPY --from=base / /
+#FROM scratch
+#COPY --from=base / /
 
 LABEL containers.bootc 1
 LABEL ostree.bootable 1
