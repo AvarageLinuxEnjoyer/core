@@ -4,7 +4,8 @@ FROM cachyos/cachyos-v3:latest AS base
 
 RUN pacman -Syu --noconfirm
 
-RUN pacman -S --noconfirm rust cargo
+RUN pacman -Rns --noconfirm rustup || true \
+ && pacman -S --noconfirm rust cargo
 
 ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
 
