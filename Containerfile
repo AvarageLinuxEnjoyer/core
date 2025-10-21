@@ -1,4 +1,4 @@
-FROM docker.io/krolmiki2011/arch-coreos:latest AS base
+FROM krolmiki2011/arch-coreos:latest AS base
 
 # Set locale
 RUN sed -i 's@#en_US.UTF-8@en_US.UTF-8@g' /etc/locale.gen
@@ -45,5 +45,9 @@ RUN pacman -Sy --noconfirm fastfetch linux linux-headers linux-firmware # plasma
 
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
+
+FROM scratch
+
+COPY --from=base / /
 
 RUN pacman-ostree ostree container commit
