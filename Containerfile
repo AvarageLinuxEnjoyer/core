@@ -27,15 +27,15 @@ RUN pacman -Syu --noconfirm && \
 
 
 
-RUN useradd -m -s /bin/bash aur && \
-    echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
-    mkdir -p /tmp_aur_build && chown -R aur /tmp_aur_build && \
-    install-packages-build git base-devel; \
-    runuser -u aur -- env -C /tmp_aur_build git clone 'https://aur.archlinux.org/paru-bin.git' && \
-    runuser -u aur -- env -C /tmp_aur_build/paru-bin makepkg -si --noconfirm && \
-    rm -rf /tmp_aur_build && \
-    runuser -u aur -- paru -S --noconfirm grub-efi bootc-git bootupd-git shim-fedora pacman-ostree ; \
-    userdel -rf aur; rm -rf /home/aur /etc/sudoers.d/aur
+#RUN useradd -m -s /bin/bash aur && \
+#    echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
+#    mkdir -p /tmp_aur_build && chown -R aur /tmp_aur_build && \
+#    install-packages-build git base-devel; \
+#    runuser -u aur -- env -C /tmp_aur_build git clone 'https://aur.archlinux.org/paru-bin.git' && \
+#    runuser -u aur -- env -C /tmp_aur_build/paru-bin makepkg -si --noconfirm && \
+#    rm -rf /tmp_aur_build && \
+#    runuser -u aur -- paru -S --noconfirm grub-efi bootc-git bootupd-git shim-fedora pacman-ostree ; \
+#    userdel -rf aur; rm -rf /home/aur /etc/sudoers.d/aur
 
 
 RUN pacman -Syu --noconfirm
