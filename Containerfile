@@ -4,6 +4,9 @@ FROM cachyos/cachyos-v3:latest AS base
 
 RUN pacman -Syu --noconfirm
 
+RUN pacman -Sy --noconfirm rustup
+RUN rustup default stable
+
 ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
 
 RUN useradd -m -s /bin/bash aur && \
