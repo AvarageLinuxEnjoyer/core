@@ -4,7 +4,7 @@ RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://imm
 
 RUN pacman -Syu --noconfirm
 
-RUN pacman -Sy --noconfirm grub-efi bootc-git bootupd-git shim-fedora pacman-ostree
+RUN pacman -Sy --noconfirm ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree
 
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
