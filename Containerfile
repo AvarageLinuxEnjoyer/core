@@ -1,21 +1,14 @@
-FROM docker.io/krolmiki2011/arch-coreos:latest AS core
-
-RUN pacman --noconfirm -Sy
-RUN pacman --noconfirm -Sw $(pacman -Qqe)
-
 FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS base
 
-COPY --from=core /var/cache/pacman/pkg/ /var/cache/pacman/pkg/
+RUN pacman --noconfirm -Sy paru
 
-
-
-RUN pacman --noconfirm -U /var/cache/pacman/pkg/bootc-git.pkg.tar.zst
-RUN pacman --noconfirm -U /var/cache/pacman/pkg/pacman-ostree.pkg.tar.zst
-RUN pacman --noconfirm -U /var/cache/pacman/pkg/bootupd-git.pkg.tar.zst
-RUN pacman --noconfirm -U /var/cache/pacman/pkg/grub-efi.pkg.tar.zst
-RUN pacman --noconfirm -U /var/cache/pacman/pkg/shim-fedora.pkg.tar.zst
-RUN pacman --noconfirm -U /var/cache/pacman/pkg/ostree.pkg.tar.zst
-#RUN pacman --noconfirm -U /var/cache/pacman/pkg/*.pkg.tar.zst
+RUN paru --noconfirm -Sy \
+bootc-git \
+pacman-ostree \
+bootupd-git \
+grub-efi \
+shim-fedora \
+ostree
 
 
 
