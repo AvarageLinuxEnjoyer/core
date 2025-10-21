@@ -11,6 +11,9 @@ RUN rm -rf /var/lib/pacman/sync/* && \
 
 FROM scratch
 
+LABEL containers.bootc 1
+LABEL ostree.bootable 1
+
 COPY --from=base / /
 
 RUN pacman-ostree ostree container commit
