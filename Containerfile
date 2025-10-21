@@ -1,6 +1,7 @@
 FROM docker.io/krolmiki2011/arch-coreos:latest AS core
 
-RUN pacman -Sw
+RUN pacman --noconfirm -Sy
+RUN pacman --noconfirm -Sw $(pacman -Qqe)
 
 FROM ghcr.io/pkgforge/devscripts/cachyos-base:latest AS base
 
