@@ -6,8 +6,8 @@ RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://imm
 #RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
 
 RUN pacman -Syu --noconfirm
-RUN pacman -Sy --noconfirm rust cargo
-RUN pacman -Sy --noconfirm $AUR
+RUN pacman -S --noconfirm rustc
+RUN pacman -S --noconfirm $AUR
 
 #RUN useradd -m -s /bin/bash aur && \
 #    echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
