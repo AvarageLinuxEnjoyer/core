@@ -1,6 +1,7 @@
 FROM cachyos/cachyos-v3:latest AS base
 
-ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
+ARG BASE_PKGS=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
+ARG AUR=""
 
 RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
 #RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
@@ -15,7 +16,7 @@ RUN pacman -Sy --noconfirm rustup && \
 
 
 
-RUN pacman -S --noconfirm $AUR
+RUN pacman -S --noconfirm $BASE_PKGS
 
 #RUN useradd -m -s /bin/bash aur && \
 #    echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
@@ -36,4 +37,4 @@ RUN pacman -S --noconfirm $AUR
 LABEL containers.bootc="1"
 LABEL ostree.bootable="1"
 
-RUN pacman-ostree ostree container commit
+# RUN pacman-ostree ostree container commit
