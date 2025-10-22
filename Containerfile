@@ -17,7 +17,7 @@ RUN useradd -m -s /bin/bash aur && \
     runuser -u aur -- env -C /tmp_aur_build git clone 'https://aur.archlinux.org/paru-bin.git' && \
     runuser -u aur -- env -C /tmp_aur_build/paru-bin makepkg -si --noconfirm && \
     rm -rf /tmp_aur_build && \
-    runuser -u aur -- paru -S --noconfirm --assume-installed="rust" $AUR; \
+    runuser -u aur -- RUST_TOOLCHAIN=rust paru -S --noconfirm $AUR; \
     userdel -rf aur; rm -rf /home/aur /etc/sudoers.d/aur
 
 #RUN rm -rf /var/lib/pacman/sync/* && \
