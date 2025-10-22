@@ -38,3 +38,6 @@ LABEL containers.bootc="1"
 LABEL ostree.bootable="1"
 
 # RUN pacman-ostree ostree container commit
+
+CMD ["/sbin/init"]
+RUN bootc container lint
