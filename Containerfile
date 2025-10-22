@@ -6,7 +6,15 @@ RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://imm
 #RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
 
 RUN pacman -Syu --noconfirm
-RUN pacman -S --noconfirm rustc
+
+
+RUN pacman -Sy --noconfirm rustup && \
+    export PATH="$HOME/.cargo/bin:$PATH" && \
+    RUSTUP_NO_SELF_UPDATE=1 RUSTUP_IO_THREADS=4 rustup default stable && \
+    rustup update stable
+
+
+
 RUN pacman -S --noconfirm $AUR
 
 #RUN useradd -m -s /bin/bash aur && \
