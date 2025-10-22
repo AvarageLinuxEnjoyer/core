@@ -6,14 +6,16 @@ ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
 
 RUN pacman -Syu --noconfirm
 
-RUN pacman -Rns --noconfirm rustup || true
-RUN pacman -Rns --noconfirm rust || true
-RUN pacman -S --noconfirm base-devel
-RUN pacman -S --noconfirm rustup cargo
+#RUN pacman -Rns --noconfirm rustup || true
+#RUN pacman -Rns --noconfirm rust || true
+#RUN pacman -S --noconfirm base-devel
+#RUN pacman -S --noconfirm rustup cargo
 
-ENV PATH="/root/.cargo/bin:${PATH}"
+RUN echo -e '#!/bin/sh\nexec "$@"' > /usr/bin/rustup && chmod +x /usr/bin/rustup
 
-RUN rustup default stable
+#ENV PATH="/root/.cargo/bin:${PATH}"
+
+#RUN rustup default stable
 
 RUN useradd -m -s /bin/bash aur && \
     echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
