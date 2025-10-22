@@ -5,17 +5,10 @@ ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
 #RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
 
 RUN pacman -Syu --noconfirm
+#RUN pacman -S --assume-installed="rust" --noconfirm
 
-#RUN pacman -Rns --noconfirm rustup || true
-#RUN pacman -Rns --noconfirm rust || true
-#RUN pacman -S --noconfirm base-devel
-#RUN pacman -S --noconfirm rustup cargo
-
-RUN echo -e '#!/bin/sh\nexec "$@"' > /usr/bin/rustup && chmod +x /usr/bin/rustup
-
-#ENV PATH="/root/.cargo/bin:${PATH}"
-
-#RUN rustup default stable
+#--assume-installed
+#ENV makedepends=('rust')
 
 RUN useradd -m -s /bin/bash aur && \
     echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
@@ -24,7 +17,7 @@ RUN useradd -m -s /bin/bash aur && \
     runuser -u aur -- env -C /tmp_aur_build git clone 'https://aur.archlinux.org/paru-bin.git' && \
     runuser -u aur -- env -C /tmp_aur_build/paru-bin makepkg -si --noconfirm && \
     rm -rf /tmp_aur_build && \
-    runuser -u aur -- paru -S --noconfirm --needed $AUR; \
+    runuser -u aur -- paru -S --noconfirm --assume-installed="rust" $AUR; \
     userdel -rf aur; rm -rf /home/aur /etc/sudoers.d/aur
 
 #RUN rm -rf /var/lib/pacman/sync/* && \
