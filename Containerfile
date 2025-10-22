@@ -14,7 +14,7 @@ RUN useradd -m -s /bin/bash aur && \
     runuser -u aur -- env -C /tmp_aur_build git clone 'https://aur.archlinux.org/paru-bin.git' && \
     runuser -u aur -- env -C /tmp_aur_build/paru-bin makepkg -si --noconfirm && \
     rm -rf /tmp_aur_build && \
-    runuser -u aur -- echo '2' | paru -S --noconfirm $AUR; \
+    runuser -u aur -- paru -S --needed --noconfirm $AUR; \
     userdel -rf aur; rm -rf /home/aur /etc/sudoers.d/aur
 
 #RUN rm -rf /var/lib/pacman/sync/* && \
