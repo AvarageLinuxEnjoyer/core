@@ -6,10 +6,6 @@ ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
 
 RUN pacman -Syu --noconfirm
 RUN pacman -Sy --noconfirm rust cargo
-#RUN pacman -S --assume-installed="rust" --noconfirm
-
-#--assume-installed
-#ENV makedepends=('rust')
 
 RUN useradd -m -s /bin/bash aur && \
     echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
@@ -18,7 +14,7 @@ RUN useradd -m -s /bin/bash aur && \
     runuser -u aur -- env -C /tmp_aur_build git clone 'https://aur.archlinux.org/paru-bin.git' && \
     runuser -u aur -- env -C /tmp_aur_build/paru-bin makepkg -si --noconfirm && \
     rm -rf /tmp_aur_build && \
-    runuser -u aur -- RUST_TOOLCHAIN=rust paru -S --noconfirm $AUR; \
+    runuser -u aur -- echo '2' | paru -S --noconfirm $AUR; \
     userdel -rf aur; rm -rf /home/aur /etc/sudoers.d/aur
 
 #RUN rm -rf /var/lib/pacman/sync/* && \
