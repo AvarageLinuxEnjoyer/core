@@ -5,6 +5,7 @@ ARG AUR=" ostree grub-efi bootc-git bootupd-git shim-fedora pacman-ostree "
 #RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
 
 RUN pacman -Syu --noconfirm
+RUN pacman -Sy --noconfirm rust cargo
 #RUN pacman -S --assume-installed="rust" --noconfirm
 
 #--assume-installed
