@@ -16,7 +16,7 @@ RUN pacman -Sy --noconfirm rustup && \
 
 
 
-RUN pacman -S --noconfirm $BASE_PKGS
+RUN pacman -S --noconfirm $BASE_PKGS linux-cachyos
 
 #RUN useradd -m -s /bin/bash aur && \
 #    echo "aur ALL=(ALL) NOPASSWD: ALL" > /etc/sudoers.d/aur && \
