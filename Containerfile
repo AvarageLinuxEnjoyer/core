@@ -1,16 +1,13 @@
 FROM cachyos/cachyos-v3:latest AS cachyos
-
 RUN pacman --noconfirm -Sy linux-cachyos
 
-FROM quay.io/centos-bootc/bootc-image-builder:latest AS fedora
+#FROM quay.io/centos-bootc/bootc-image-builder:latest AS fedora
 
-#FROM quay.io/fedora/fedora-coreos:rawhide AS base
+FROM quay.io/fedora/fedora-coreos:rawhide AS base
 
-FROM cachyos/cachyos-v3:latest AS cachyos
-
-#COPY --from='cachyos' / /cachyos
+COPY --from='cachyos' / /cachyos
 #COPY --from='fedora' rootfs/ /
-COPY --from='fedora' / /
+#COPY --from='fedora' / /
 
 LABEL containers.bootc="1"
 LABEL ostree.bootable="1"
