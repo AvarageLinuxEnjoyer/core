@@ -9,6 +9,9 @@ COPY --from='cachyos' / /cachyos
 #COPY --from='fedora' rootfs/ /
 #COPY --from='fedora' / /
 
+RUN mkdir -p /boot/ostree/test
+RUN ln -s /cachyos/boot/* /boot/ostree/test/*
+
 LABEL containers.bootc="1"
 LABEL ostree.bootable="1"
 CMD ["/sbin/init"]
