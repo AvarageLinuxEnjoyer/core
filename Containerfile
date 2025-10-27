@@ -60,7 +60,6 @@ LABEL org.osbuild.bootc.variant="minimal"
 
 # Copy in the full root filesystem
 COPY --from='base' / /
-FROM scratch
 
 # Validate and fix /etc/os-release
 RUN mkdir -p /etc && \
