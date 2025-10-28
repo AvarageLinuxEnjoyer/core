@@ -9,7 +9,7 @@ RUN pacman --noconfirm -Sy linux-cachyos
 
 #FROM quay.io/fedora/fedora-coreos:rawhide AS base
 
-FROM quay.io/fedora-ostree-desktops/kinoite:43 AS base
+FROM quay.io/fedora/fedora-coreos:rawhide AS base
 
 RUN mkdir -p /cachyos
 
