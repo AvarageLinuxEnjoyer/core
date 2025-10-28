@@ -9,7 +9,9 @@ RUN pacman --noconfirm -Sy $BASE_PKGS
 
 #FROM quay.io/fedora/fedora-coreos:rawhide AS base
 
-#COPY --from='cachyos' / /cachyos
+FROM ghcr.io/ublue-os/bazzite:latest
+
+COPY --from='cachyos' / /cachyos
 #COPY --from='fedora' rootfs/ /
 #COPY --from='fedora' / /
 
@@ -18,5 +20,5 @@ RUN pacman --noconfirm -Sy $BASE_PKGS
 
 LABEL containers.bootc="1"
 LABEL ostree.bootable="1"
-LABEL org.osbuild.bootc.osname="archlinux"
+#LABEL org.osbuild.bootc.osname="archlinux"
 CMD ["/sbin/init"]
