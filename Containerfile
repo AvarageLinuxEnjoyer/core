@@ -23,4 +23,4 @@ COPY --from='cachyos' / /cachyos
 LABEL containers.bootc="1"
 LABEL ostree.bootable="1"
 #LABEL org.osbuild.bootc.osname="archlinux"
-CMD ["/sbin/init"]
+#CMD ["/sbin/init"]
