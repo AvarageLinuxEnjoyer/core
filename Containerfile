@@ -1,9 +1,9 @@
 FROM krolmiki2011/arch-coreos:latest AS arch
 RUN pacman --noconfirm -Rdd linux || true
 
-RUN mkdir -p /cachyos
+RUN mkdir -p /PKG
 RUN pacman --noconfirm -Sy
-RUN pacman --noconfirm -Sw --cachedir /cachyos \
+RUN pacman --noconfirm -Sw --cachedir /PKG \
     bootc-git \
     bootupd-git \
     pacman-ostree \
@@ -14,14 +14,14 @@ RUN pacman --noconfirm -Sw --cachedir /cachyos \
 FROM pkgforge/cachyos-base:x86_64 AS cachyos
 RUN pacman --noconfirm -Rdd linux || true 
 
-
 # install
 RUN pacman --noconfirm -Sy sddm base-devel dracut ostree composefs btrfs-progs e2fsprogs xfsprogs udev cpio zstd binutils dosfstools intel-ucore conmon crun netavark dbus dbus-glib glib2 skopeo shadow fastfetch micro grub grub-btrfs wayland linux-cachyos linux-cachyos-headers
 RUN pacman --noconfirm -Sy mesa lib32-mesa vulkan-icd-loader lib32-vulkan-icd-loader nvidia nvidia-utils lib32-nvidia-utils
 
-RUN mkdir -p /cachyos
-COPY --from='cachyos' /cachyos /cachyos
-RUN pacman --noconfirm -U /cachyos/*.pkg.tar.zst
+RUN mkdir -p /PKG
+COPY --from='arch' /PKG /PKG
+RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
+RUN rm -rf /PKG
 
 # services
 RUN systemctl enable sddm
