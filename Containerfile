@@ -15,7 +15,7 @@ FROM krolmiki2011/arch-coreos:latest AS arch
 RUN pacman --noconfirm -Rdd linux || true
 
 RUN mv /etc/pacman.conf /etc/pacman.conf.old
-RUN mv /etc/pacman.d.old
+RUN mv /etc/pacman.d /etc/pacman.d.old
 
 COPY --from='cachyos' /etc/pacman.conf /etc/pacman.conf
 COPY --from='cachyos' /etc/pacman.d /etc/pacman.d
