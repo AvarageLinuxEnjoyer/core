@@ -3,7 +3,7 @@ RUN pacman --noconfirm -Rdd linux || true
 
 RUN mkdir -p /cachyos
 RUN pacman --noconfirm -Sy
-RUN pacman --noconfirm -Sw --cachedir /cachyos (pacman -Qqe)
+RUN pacman --noconfirm -Sw --cachedir /cachyos $(pacman -Qqe)
 
 FROM krolmiki2011/arch-coreos:latest AS arch
 RUN pacman --noconfirm -Rdd linux || true 
