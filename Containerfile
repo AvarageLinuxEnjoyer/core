@@ -6,6 +6,7 @@ RUN pacman --noconfirm -Sy
 RUN pacman --noconfirm -Sw --cachedir /cachyos \
     bootc-git \
     bootupd-git \
+    pacman-ostree \
     && \
     echo "...done"
 
