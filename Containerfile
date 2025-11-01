@@ -1,4 +1,4 @@
-FROM pkgforge/cachyos-base:x86_64 AS cachyos
+FROM krolmiki2011/arch-coreos:latest AS arch
 RUN pacman --noconfirm -Rdd linux || true
 
 RUN mkdir -p /cachyos
@@ -11,8 +11,7 @@ RUN pacman --noconfirm -Sw --cachedir /cachyos \
     echo "...done"
 
 
-
-FROM krolmiki2011/arch-coreos:latest AS arch
+FROM pkgforge/cachyos-base:x86_64 AS cachyos
 RUN pacman --noconfirm -Rdd linux || true 
 
 
