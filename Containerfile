@@ -1,6 +1,6 @@
 FROM docker.io/krolmiki2011/arch-coreos:latest AS coreos
 
-ENV PACMAN_CONF=$(< /etc/pacman.conf)
+RUN export PACMAN_CONF=$(< '/etc/pacman.conf' )
 
 RUN pacman -Rdd --noconfirm linux || true
 
