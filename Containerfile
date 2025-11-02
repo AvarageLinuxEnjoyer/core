@@ -43,6 +43,8 @@ RUN for pkg in $(pacman -Qq); do \
     done
 
 
+RUN pacman -Sy --noconfirm linux-cachyos
+
 #RUN update-initramfs
 
 RUN pacman-ostree ostree container commit
