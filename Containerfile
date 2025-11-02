@@ -21,7 +21,7 @@ RUN update-initramfs
 RUN mv /usr/lib/modules/*-azure/vmlinuz* /usr/lib/modules/cachyos*/ && \
     mv /usr/lib/modules/*-azure/initramfs*.img /usr/lib/modules/cachyos*/ && \
     mv /usr/lib/modules/*-azure/vmlinuz* /boot/ && \
-    mv /usr/lib/modules/*-azure/initramfs*.img /boot/ \
+    mv /usr/lib/modules/*-azure/initramfs*.img /boot/
 
 
 #RUN rm -rf /boot/*
