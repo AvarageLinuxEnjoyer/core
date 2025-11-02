@@ -1,6 +1,7 @@
 FROM docker.io/krolmiki2011/arch-coreos:latest AS coreos
 RUN pacman -Rdd --noconfirm linux || true
 
+RUN sed -i 's/^Architecture = auto/Architecture = x86_64 x86_64_v3/' /etc/pacman.conf
 RUN cp /etc/pacman.conf /etc/pacman.conf.old
 
 RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com && yes | pacman-key --lsign-key F3B607488DB35A47
