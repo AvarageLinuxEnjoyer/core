@@ -19,8 +19,8 @@ RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
 
 RUN update-initramfs
 RUN mkdir -p /usr/lib/modules/$(uname -r) && \
-    mv /boot/vmlinuz* /usr/lib/modules/$(uname -r)/ && \
-    mv /boot/initramfs*.img /usr/lib/modules/$(uname -r)/
+    mv /boot/vmlinuz* /usr/lib/modules/cachyos*$(uname -r)/ && \
+    mv /boot/initramfs*.img /usr/lib/modules/cachyos*$(uname -r)/
 
 RUN rm -rf /boot/*
 RUN rm -rf /var/log/*
