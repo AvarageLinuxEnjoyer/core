@@ -20,14 +20,13 @@ RUN pacman -Sy
 RUN pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks
 RUN pacman -S --needed --noconfirm pacman
 
-RUN pacman -Sy --noconfirm
-RUN for pkg in $(pacman -Qq); do \
-    pacman -Su --noconfirm "$pkg"; \
-    pacman -Scc --noconfirm \
-    rm -rf /var/lib/pacman/sync/* && \
-    find /var/cache/pacman/ -type f -delete; \
-done
-
+RUN pacman -Sy --noconfirm && \
+    for pkg in $(pacman -Qq); do \
+        pacman -Su --noconfirm "$pkg"; \
+        pacman -Scc --noconfirm; \
+        rm -rf /var/lib/pacman/sync/* && \
+        find /var/cache/pacman/ -type f -delete; \
+    done
 
 
 
