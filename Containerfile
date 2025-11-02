@@ -1,48 +1,35 @@
-FROM pkgforge/cachyos-base:x86_64 AS base
+FROM docker.io/krolmiki2011/arch-coreos:latest AS coreos
 
-RUN echo -e "[immutablearch]\nSigLevel = Optional TrustAll\nServer = https://immutablearch.github.io/packages/aur-repo/" \ >> /etc/pacman.conf
-
+RUN pacman -Rdd --noconfirm linux || true
 
 LABEL containers.bootc=1
 LABEL ostree.bootable=1
 
-RUN pacman -Syu --noconfirm \
-    bootc-git pacman-ostree grub-efi linux-cachyos ostree \
-    grub efibootmgr glibc glibc-locales \
-    mokutil sbsigntools shim-fedora grub-blscfg \
-    bootupd-git composefs btrfs-progs xfsprogs \
-    e2fsprogs dosfstools podman
 
-#COPY --from="bootc" /var/cache/pacman/* /PKG/
-#RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
+
+
+RUN sed -i 's@#en_US.UTF-8@en_US.UTF-8@g' /etc/locale.gen
+RUN echo "root ALL=(ALL) NOPASSWD: ALL" >> /etc/sudoers
+RUN yes | pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
+RUN yes | pacman-key --lsign-key F3B607488DB35A47
+
+RUN echo "" >> /etc/pacman.conf
+RUN echo "[cachyos]" >> /etc/pacman.conf
+RUN echo "Include = /etc/pacman.d/cachyos-mirrorlist" >> /etc/pacman.conf
+RUN curl https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
+
+pacman -Sy && \
+	 pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks && \
+	 pacman -Syu --noconfirm && \
+     rm -rf /var/lib/pacman/sync/* && \
+     find /var/cache/pacman/ -type f -delete
+
+
+
+
 
 RUN update-initramfs
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-#RUN rm -rf /boot/*
-RUN rm -rf /var/log/*
-RUN rm -rf /var/cache/*
-RUN rm -rf /tmp/*
-RUN rm -rf /run/*
-
 RUN pacman-ostree ostree container commit
-
 
 ENTRYPOINT ["/usr/bin/env bash"]
