@@ -18,8 +18,7 @@ COPY --from="bootc" /var/cache/pacman/* /PKG/
 RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
 
 RUN mkdir -p /usr/lib/modules/$(uname -r) && \
-    mv /boot/vmlinuz-linux-cachyos /usr/lib/modules/$(uname -r)/vmlinuz && \
-    mv /boot/initramfs-linux-cachyos.img /usr/lib/modules/$(uname -r)/initramfs.img
+    mv /boot/* /usr/lib/modules/$(uname -r)
 
 RUN rm -rf /boot/*
 RUN rm -rf /var/log/*
