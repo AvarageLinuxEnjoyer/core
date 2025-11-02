@@ -7,9 +7,7 @@ RUN pacman -Rdd --noconfirm linux || true
 LABEL containers.bootc=1
 LABEL ostree.bootable=1
 
-
-RUN yes | pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com
-RUN yes | pacman-key --lsign-key F3B607488DB35A47
+RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com && yes | pacman-key --lsign-key F3B607488DB35A47
 
 RUN echo "" >> /etc/pacman.conf
 
