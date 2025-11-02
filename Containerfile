@@ -1,21 +1,30 @@
-FROM pkgforge/cachyos-base:x86_64 AS cachyos
-RUN pacman -Rdd --noconfirm linux || true
+krolmiki2011/arch-coreos:latest AS bootc
 
-RUN pacman --noconfirm -Sw
+RUN rm -rf /var/cache/pacman/*
 
-FROM krolmiki2011/arch-coreos:latest AS coreos
-RUN pacman -Rdd --noconfirm linux || true
+RUN pacman --noconfirm -Sw bootc-git
 
-COPY --from=cachyos /usr /usr
-COPY --from=cachyos /etc /etc
+FROM pkgforge/cachyos-base:x86_64 AS base
 
-RUN pacman -Syyu --noconfirm \
-    && pacman --noconfirm -U /var/cache/pacman/pkg/*.pkg.tar.zst \
-    && rm -rf /var/cache/pacman/pkg/*
+LABEL containers.bootc=1
+LABEL ostree.bootable=1
 
-pacman --noconfirm -Sy linux-cachyos linux-cachyos-headers
+COPY --from="bootc" /var/cache/pacman/* /PKG/
+RUN pacman -U /PKG/*.pkg.tar.zst
 
-LABEL containers.bootc="1"
-LABEL ostree.bootable="1"
+RUN pacman -Syu --noconfirm \
+    linux-cachyos nvidia nvidia-utils steam lutris ostree \
+    grub efibootmgr \
+    && pacman -Scc --noconfirm
 
-CMD ["/bin/bash"]
+RUN mkdir -p /usr/lib/modules/$(uname -r) && \
+    mv /boot/vmlinuz-linux-cachyos /usr/lib/modules/$(uname -r)/vmlinuz && \
+    mv /boot/initramfs-linux-cachyos.img /usr/lib/modules/$(uname -r)/initramfs.img
+
+RUN rm -rf /boot/*
+RUN rm -rf /var/log/*
+RUN rm -rf /var/cache/*
+RUN rm -rf /tmp/*
+RUN rm -rf /run/*
+
+ENTRYPOINT ["/usr/bin/bash"]
