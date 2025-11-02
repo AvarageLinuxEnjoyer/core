@@ -18,8 +18,8 @@ COPY --from="bootc" /var/cache/pacman/* /PKG/
 RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
 
 RUN update-initramfs
-RUN cd /usr/lib/modules/*-azure/ && mv ./vmlinuz* /usr/lib/modules/cachyos*/
-RUN cd /usr/lib/modules/*-azure/ && mv ./initramfs*.img /usr/lib/modules/cachyos*/
+#RUN cd /usr/lib/modules/*-azure/ && mv ./vmlinuz* /usr/lib/modules/cachyos*/
+#RUN cd /usr/lib/modules/*-azure/ && mv ./initramfs*.img /usr/lib/modules/cachyos*/
 RUN cd /usr/lib/modules/*-azure/ && mv ./vmlinuz*  /boot/
 RUN cd /usr/lib/modules/*-azure/ && mv ./initramfs*.img /boot/
 
