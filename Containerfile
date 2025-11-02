@@ -14,11 +14,12 @@ Include = /etc/pacman.d/cachyos-mirrorlist
 EOF
 RUN curl https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/cachyos-mirrorlist/cachyos-mirrorlist -o /etc/pacman.d/cachyos-mirrorlist
 
-RUN pacman -Sy && \
-	pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks && \
-	pacman -S --needed --noconfirm pacman && \
-	pacman -Syu --noconfirm && \
-    rm -rf /var/lib/pacman/sync/* && \
+RUN pacman -Sy
+RUN pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks
+RUN pacman -S --needed --noconfirm pacman
+RUN pacman -Syu --noconfirm
+
+RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
 
 RUN echo "$PACMAN_CONF" > /etc/pacman.conf
