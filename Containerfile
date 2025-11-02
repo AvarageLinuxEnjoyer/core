@@ -5,8 +5,6 @@ RUN cp /etc/pacman.conf /etc/pacman.conf.old
 
 RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com && yes | pacman-key --lsign-key F3B607488DB35A47
 
-RUN echo "" >> /etc/pacman.conf
-
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
 
@@ -37,16 +35,15 @@ Include = /etc/pacman.d/cachyos-mirrorlist
 EOF
 
 
-RUN pacman -Sy --noconfirm && \
-    for pkg in $(pacman -Qq); do \
-        pacman -Su --noconfirm "$pkg"; \
-        pacman -Scc --noconfirm; \
+RUN pacman -Sy
+RUN for pkg in $(pacman -Qq); do \
+        pacman -S --noconfirm "$pkg"; \
         rm -rf /var/lib/pacman/sync/* && \
         find /var/cache/pacman/ -type f -delete; \
     done
 
 
-RUN update-initramfs
+#RUN update-initramfs
 
 RUN pacman-ostree ostree container commit
 LABEL containers.bootc=1
