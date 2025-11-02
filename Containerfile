@@ -7,6 +7,8 @@ RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --recv-ke
 
 RUN echo "" >> /etc/pacman.conf
 
+RUN rm -rf /var/lib/pacman/sync/* && \
+    find /var/cache/pacman/ -type f -delete
 
 RUN cat << 'EOF' >> /etc/pacman.conf
 [cachyos]
@@ -17,7 +19,7 @@ RUN curl https://raw.githubusercontent.com/CachyOS/CachyOS-PKGBUILDS/master/cach
 RUN pacman -Sy
 RUN pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks
 RUN pacman -S --needed --noconfirm pacman
-RUN pacman -Syu --noconfirm
+RUN pacman -Syu --noconfirm --needed
 
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
