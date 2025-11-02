@@ -9,13 +9,13 @@ FROM pkgforge/cachyos-base:x86_64 AS base
 LABEL containers.bootc=1
 LABEL ostree.bootable=1
 
-COPY --from="bootc" /var/cache/pacman/* /PKG/
-RUN pacman -U /PKG/*.pkg.tar.zst
-
 RUN pacman -Syu --noconfirm \
     linux-cachyos nvidia nvidia-utils steam lutris ostree \
     grub efibootmgr \
     && pacman -Scc --noconfirm
+
+COPY --from="bootc" /var/cache/pacman/* /PKG/
+RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
 
 RUN mkdir -p /usr/lib/modules/$(uname -r) && \
     mv /boot/vmlinuz-linux-cachyos /usr/lib/modules/$(uname -r)/vmlinuz && \
