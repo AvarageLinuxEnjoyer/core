@@ -11,7 +11,7 @@ RUN pacman -Syu --noconfirm \
     grub efibootmgr glibc glibc-locales \
     mokutil sbsigntools shim-fedora grub-blscfg \
     bootupd-git composefs btrfs-progs xfsprogs \
-    e2fsprogs dosfstools podman buildah
+    e2fsprogs dosfstools podman
 
 #COPY --from="bootc" /var/cache/pacman/* /PKG/
 #RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
