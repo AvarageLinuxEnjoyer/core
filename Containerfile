@@ -1,7 +1,7 @@
 FROM docker.io/krolmiki2011/arch-coreos:latest AS coreos
 RUN pacman -Rdd --noconfirm linux || true
 
-RUN export PACMAN_CONF=$(< '/etc/pacman.conf' )
+RUN cp /etc/pacman.conf /etc/pacman.conf.old
 
 RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com && yes | pacman-key --lsign-key F3B607488DB35A47
 
@@ -33,7 +33,7 @@ RUN pacman -Sy --noconfirm && \
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
 
-RUN echo "$PACMAN_CONF" > /etc/pacman.conf
+RUN rm -rf /etc/pacman.conf && mv /etc/pacman.conf.old /etc/pacman.conf
 
 RUN cat << 'EOF' >> /etc/pacman.conf
 [cachyos-v3]
