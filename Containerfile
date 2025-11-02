@@ -12,8 +12,7 @@ RUN pacman -Syu --noconfirm \
     mokutil sbsigntools shim-fedora grub-blscfg \
     bootupd-git \
     composefs btrfs-progs xfsprogs e2fsprogs dosfstools \
-    podman buildah skopeo \
-    && pacman -Scc --noconfirm
+    podman buildah skopeo
 
 #COPY --from="bootc" /var/cache/pacman/* /PKG/
 #RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
