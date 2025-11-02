@@ -1,4 +1,4 @@
-krolmiki2011/arch-coreos:latest AS bootc
+RUN krolmiki2011/arch-coreos:latest AS bootc
 
 RUN rm -rf /var/cache/pacman/*
 
