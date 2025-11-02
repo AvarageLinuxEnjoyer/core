@@ -3,7 +3,7 @@ RUN pacman -Rdd --noconfirm linux || true
 
 RUN sed -i 's/^Architecture = auto/Architecture = x86_64 x86_64_v3/' /etc/pacman.conf
 
-RUN $(curl -fsSL https://raw.githubusercontent.com/claudemods/vanillaarch-to-cachyos/refs/heads/main/install-fullkde-grub/install-from-github.sh) 
+RUN yes | $(curl -fsSL https://raw.githubusercontent.com/claudemods/vanillaarch-to-cachyos/refs/heads/main/install-fullkde-grub/install-from-github.sh) 
 
 
 #RUN pacman -Sy
