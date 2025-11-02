@@ -10,9 +10,8 @@ RUN pacman -Syu --noconfirm \
     bootc-git pacman-ostree grub-efi linux-cachyos ostree \
     grub efibootmgr glibc glibc-locales \
     mokutil sbsigntools shim-fedora grub-blscfg \
-    bootupd-git \
-    composefs btrfs-progs xfsprogs e2fsprogs dosfstools \
-    podman buildah skopeo
+    bootupd-git composefs btrfs-progs xfsprogs \
+    e2fsprogs dosfstools podman buildah
 
 #COPY --from="bootc" /var/cache/pacman/* /PKG/
 #RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
