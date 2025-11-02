@@ -20,16 +20,6 @@ RUN pacman -Sy
 RUN pacman -S --needed --noconfirm cachyos-keyring cachyos-mirrorlist cachyos-v3-mirrorlist cachyos-v4-mirrorlist cachyos-hooks
 RUN pacman -S --needed --noconfirm pacman
 
-RUN pacman -Sy --noconfirm && \
-    for pkg in $(pacman -Qq); do \
-        pacman -Su --noconfirm "$pkg"; \
-        pacman -Scc --noconfirm; \
-        rm -rf /var/lib/pacman/sync/* && \
-        find /var/cache/pacman/ -type f -delete; \
-    done
-
-
-
 RUN rm -rf /var/lib/pacman/sync/* && \
     find /var/cache/pacman/ -type f -delete
 
@@ -46,11 +36,14 @@ Include = /etc/pacman.d/cachyos-v3-mirrorlist
 Include = /etc/pacman.d/cachyos-mirrorlist
 EOF
 
-RUN pacman -Syu --noconfirm && \
-    rm -rf /var/lib/pacman/sync/* && \
-    find /var/cache/pacman/ -type f -delete
 
-
+RUN pacman -Sy --noconfirm && \
+    for pkg in $(pacman -Qq); do \
+        pacman -Su --noconfirm "$pkg"; \
+        pacman -Scc --noconfirm; \
+        rm -rf /var/lib/pacman/sync/* && \
+        find /var/cache/pacman/ -type f -delete; \
+    done
 
 
 RUN update-initramfs
