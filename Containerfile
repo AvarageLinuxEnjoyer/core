@@ -20,9 +20,14 @@ RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
 RUN update-initramfs
 RUN mkdir -p /usr/lib/modules/$(uname -r) && \
     mv /boot/vmlinuz* /usr/lib/modules/cachyos*$(uname -r)/ && \
-    mv /boot/initramfs*.img /usr/lib/modules/cachyos*$(uname -r)/
+    mv /boot/initramfs*.img /usr/lib/modules/cachyos*$(uname -r)/ && \
+    mv /usr/lib/modules/*-azure/vmlinuz* /usr/lib/modules/cachyos*$(uname -r)/ && \
+    mv /usr/lib/modules/*-azure/initramfs*.img /usr/lib/modules/cachyos*$(uname -r)/ && \
+    mv /usr/lib/modules/*-azure/vmlinuz* /boot/ && \
+    mv /usr/lib/modules/*-azure/initramfs*.img /boot/ \
 
-RUN rm -rf /boot/*
+
+#RUN rm -rf /boot/*
 RUN rm -rf /var/log/*
 RUN rm -rf /var/cache/*
 RUN rm -rf /tmp/*
