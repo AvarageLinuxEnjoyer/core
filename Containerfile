@@ -18,10 +18,37 @@ COPY --from="bootc" /var/cache/pacman/* /PKG/
 RUN pacman --noconfirm -U /PKG/*.pkg.tar.zst
 
 RUN update-initramfs
-#RUN cd /usr/lib/modules/*-azure/ && mv ./vmlinuz* /usr/lib/modules/cachyos*/
-#RUN cd /usr/lib/modules/*-azure/ && mv ./initramfs*.img /usr/lib/modules/cachyos*/
-RUN cd /usr/lib/modules/cachyos* && mv /boot/vmlinuz* ./
-RUN cd /usr/lib/modules/cachyos* && mv /boot/initramfs*.img ./
+
+
+
+
+
+
+
+
+# Move kernel, initramfs, and modules into /build/rootfs
+RUN set -eux; \
+    mkdir -p /build/rootfs/{boot,usr/lib/modules}; \
+    \
+    echo ">>> Copying any kernel images from /boot..."; \
+    rsync -av /boot/vmlinuz* /build/rootfs/boot/ 2>/dev/null || echo "No vmlinuz files found"; \
+    \
+    echo ">>> Copying any initramfs images from /boot..."; \
+    rsync -av /boot/initramfs*.img /build/rootfs/boot/ 2>/dev/null || echo "No initramfs files found"; \
+    \
+    echo ">>> Copying all kernel module directories..."; \
+    rsync -av /usr/lib/modules/* /build/rootfs/usr/lib/modules/ 2>/dev/null || echo "No modules found"; \
+    \
+    echo ">>> Done. Kernel files are now in /build/rootfs"
+
+
+
+
+
+
+
+
+
 
 
 #RUN rm -rf /boot/*
