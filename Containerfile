@@ -7,10 +7,10 @@ LABEL containers.bootc=1
 LABEL ostree.bootable=1
 
 RUN pacman -Syu --noconfirm \
-    linux-cachyos pacman-ostree ostree \
+    bootc-git pacman-ostree grub-efi linux-cachyos ostree \
     grub efibootmgr glibc glibc-locales \
     mokutil sbsigntools shim-fedora grub-blscfg \
-    bootc-git bootupd-git \
+    bootupd-git \
     composefs btrfs-progs xfsprogs e2fsprogs dosfstools \
     podman buildah skopeo \
     && pacman -Scc --noconfirm
@@ -45,5 +45,6 @@ RUN rm -rf /tmp/*
 RUN rm -rf /run/*
 
 RUN pacman-ostree ostree container commit
+
 
 ENTRYPOINT ["/usr/bin/env bash"]
