@@ -1,11 +1,7 @@
 FROM docker.io/krolmiki2011/arch-coreos:latest AS coreos
-
-RUN export PACMAN_CONF=$(< '/etc/pacman.conf' )
-
 RUN pacman -Rdd --noconfirm linux || true
 
-LABEL containers.bootc=1
-LABEL ostree.bootable=1
+RUN export PACMAN_CONF=$(< '/etc/pacman.conf' )
 
 RUN pacman-key --init && pacman-key --populate archlinux && pacman-key --recv-keys F3B607488DB35A47 --keyserver keyserver.ubuntu.com && yes | pacman-key --lsign-key F3B607488DB35A47
 
@@ -48,5 +44,6 @@ RUN pacman -Syu --noconfirm && \
 RUN update-initramfs
 
 RUN pacman-ostree ostree container commit
-
+LABEL containers.bootc=1
+LABEL ostree.bootable=1
 ENTRYPOINT ["/usr/bin/env bash"]
