@@ -26,20 +26,6 @@ RUN update-initramfs
 
 
 
-# Move kernel, initramfs, and modules into /build/rootfs
-RUN set -eux; \
-    mkdir -p /build/rootfs/{boot,usr/lib/modules}; \
-    \
-    echo ">>> Copying any kernel images from /boot..."; \
-    rsync -av /boot/vmlinuz* /build/rootfs/boot/ 2>/dev/null || echo "No vmlinuz files found"; \
-    \
-    echo ">>> Copying any initramfs images from /boot..."; \
-    rsync -av /boot/initramfs*.img /build/rootfs/boot/ 2>/dev/null || echo "No initramfs files found"; \
-    \
-    echo ">>> Copying all kernel module directories..."; \
-    rsync -av /usr/lib/modules/* /build/rootfs/usr/lib/modules/ 2>/dev/null || echo "No modules found"; \
-    \
-    echo ">>> Done. Kernel files are now in /build/rootfs"
 
 
 
