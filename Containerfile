@@ -3,7 +3,7 @@ FROM docker.io/cachyos/cachyos:latest
 
 #RUN pacman --noconfirm -Rdd $( pacman -Qqe )
 
-RUN pacman --noconfirm -S linux-cachyos plasma fastfetch micro
+RUN pacman --noconfirm -Sy linux-cachyos plasma fastfetch micro
 
 ########################################################################################################################################
 # Section 2 - Set up bootc dracut ######################################################################################################
