@@ -1,54 +1,7 @@
-FROM docker.io/cachyos/cachyos:latest
+FROM ghcr.io/xeniameraki/arch-bootc:latest
 
-
-#RUN pacman --noconfirm -Rdd $( pacman -Qqe )
+RUN pacman --noconfirm -Rdd $( pacman -Qqe )
 
 RUN pacman --noconfirm -Sy linux-cachyos plasma fastfetch micro
 
-########################################################################################################################################
-# Section 2 - Set up bootc dracut ######################################################################################################
-########################################################################################################################################
-
-# Workaround due to dracut version bump, please remove eventually
-# FIXME: remove
-RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /etc/dracut.conf.d/fix-bootc.conf
-
-RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
-    pacman -S --noconfirm base-devel git rust && \
-    git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
-    make -C /tmp/bootc bin install-all install-initramfs-dracut && \
-    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"' && \
-    pacman -S --clean --noconfirm
-
-
-
-
-
-
-
-
-
-### ### ### ###
-
-
-
-# Necessary for general behavior expected by image-based systems
-RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
-    rm -rf /boot /home /root /usr/local /srv && \
-    mkdir -p /var /sysroot /boot /usr/lib/ostree && \
-    ln -s var/opt /opt && \
-    ln -s var/roothome /root && \
-    ln -s var/home /home && \
-    ln -s sysroot/ostree /ostree && \
-    echo "$(for dir in opt usrlocal home srv mnt ; do echo "d /var/$dir 0755 root root -" ; done)" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo "d /var/roothome 0700 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    echo "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
-    printf "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true\n" | tee "/usr/lib/ostree/prepare-root.conf"
-
-#Final user setup and lint
-
-RUN pacman -S whois --noconfirm
-RUN usermod -p "$(echo "changeme" | mkpasswd -s)" root
-
-RUN bootc container lint
+RUN bootc container init
