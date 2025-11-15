@@ -2,9 +2,7 @@ FROM cachyos/cachyos-v3:latest AS cachyos
 
 FROM ghcr.io/ublue-os/bazzite:latest
 
-RUN rm -rf /lib/modules
-
-RUN mkdir -p /lib/modules
+RUN rm -rf /lib/modules/*
 
 COPY --from=cachyos /lib/modules/* /lib/modules/
 
