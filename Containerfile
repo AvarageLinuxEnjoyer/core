@@ -1,4 +1,4 @@
-FROM cachyos/cachyos-v3:latest AS cachyos
+FROM cachyos/cachyos-v3:latest AS arch
 ARG VMLINUZ=$( find /lib/modules/ -name "vmlinuz*" )
 ARG INITRAMFS=$( find /lib/modules -name initramfs*.img | head -n 1 )
 
