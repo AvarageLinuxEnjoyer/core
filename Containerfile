@@ -15,7 +15,7 @@ ARG INITRAMFS=$( find /lib/modules -name initramfs*.img | head -n 1 )
 
 RUN rm -rf /boot/vmlinuz-$(uname -r) /lib/modules/$(uname -r)
 
-COPY --from=arch ${ VMLINUZ } ${ VMLINUZ }
-COPY --from=arch ${ INITRAMFS } ${ INITRAMFS }
+COPY --from=arch $VMLINUZ $VMLINUZ
+COPY --from=arch $INITRAMFS $INITRAMFS
 
 RUN bootc container lint
