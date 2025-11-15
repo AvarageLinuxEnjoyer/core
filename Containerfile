@@ -1,7 +1,21 @@
-FROM ghcr.io/xeniameraki/arch-bootc:latest
+FROM cachyos/cachyos-v3:latest AS cachyos
+ARG VMLINUZ=$( find /lib/modules/ -name "vmlinuz*" )
+ARG INITRAMFS=$( find /lib/modules -name initramfs*.img | head -n 1 )
 
-RUN pacman --noconfirm -Rdd $( pacman -Qqe )
 
-RUN pacman --noconfirm -Sy linux-cachyos plasma fastfetch micro
+RUN mkdir -p /tmp/kernel
+RUN cp -r /boot/vmlinuz-* /tmp/kernel/
+RUN cp -r /lib/modules/* /tmp/kernel/modules/
+RUN cp /boot/config-$(uname -r) /tmp/kernel/config
 
-RUN bootc container init
+FROM ghcr.io/ublue-os/bazzite:latest
+ARG VMLINUZ=$( find /lib/modules/ -name "vmlinuz*" )
+ARG INITRAMFS=$( find /lib/modules -name initramfs*.img | head -n 1 )
+
+
+RUN rm -rf /boot/vmlinuz-$(uname -r) /lib/modules/$(uname -r)
+
+COPY --from=arch ${ VMLINUZ } ${ VMLINUZ }
+COPY --from=arch ${ INITRAMFS } ${ INITRAMFS }
+
+RUN bootc container lint
