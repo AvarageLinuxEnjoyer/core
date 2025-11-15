@@ -4,6 +4,8 @@ FROM ghcr.io/ublue-os/bazzite:latest
 
 RUN rm -rf /lib/modules
 
-COPY --from=cachyos /lib/modules /lib/modules
+RUN mkdir -p /lib/modules
+
+COPY --from=cachyos /lib/modules/* /lib/modules/
 
 RUN bootc container lint
