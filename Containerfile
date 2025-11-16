@@ -2,7 +2,7 @@ FROM cachyos/cachyos-v3:latest AS cachyos
 
 RUN pacman -Sy --noconfirm linux-cachyos
 
-FROM ghcr.io/winblues/vauxite-minimal:latest
+FROM quay.io/centos/centos:latest
 
 rpm-ostree install bootc
 
