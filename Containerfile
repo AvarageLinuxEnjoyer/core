@@ -1,6 +1,6 @@
 FROM cachyos/cachyos-v3:latest AS cachyos
 
-RUN -Sy --noiconfirm linux-cachyos
+RUN pacman -Sy --noiconfirm linux-cachyos
 
 FROM ghcr.io/winblues/vauxite-minimal:latest
 
