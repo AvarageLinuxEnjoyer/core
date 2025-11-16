@@ -4,6 +4,8 @@ RUN pacman -Sy --noconfirm linux-cachyos
 
 FROM ghcr.io/winblues/vauxite-minimal:latest
 
+rpm-ostree install bootc
+
 RUN rm -rf /usr/lib/modules/*
 
 COPY --from=cachyos /usr/lib/modules/* /usr/lib/modules/
