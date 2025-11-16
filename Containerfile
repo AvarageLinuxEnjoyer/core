@@ -1,6 +1,6 @@
 FROM cachyos/cachyos-v3:latest AS cachyos
 
-FROM ghcr.io/ublue-os/bazzite:latest
+FROM ghcr.io/winblues/vauxite-minimal:latest
 
 RUN rm -rf /lib/modules/*
 
