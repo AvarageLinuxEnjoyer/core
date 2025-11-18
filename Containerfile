@@ -51,6 +51,13 @@ RUN pacman -S --noconfirm reflector
 # Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
 RUN pacman -S --noconfirm base base-devel dracut linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
 
+
+
+# temp kernel
+#RUN pacman --noconfirm -S linux
+
+
+
 # Media/Install utilities/Media drivers
 RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
       vulkan-tools wayland-utils playerctl
@@ -96,12 +103,12 @@ RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 # FIXME: remove
 RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /etc/dracut.conf.d/fix-bootc.conf
 
-RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
-    pacman -S --noconfirm base-devel git rust && \
-    git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
-    make -C /tmp/bootc bin install-all install-initramfs-dracut && \
-    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
+#RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
+#    pacman -S --noconfirm base-devel git rust && \
+#    git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
+#    make -C /tmp/bootc bin install-all install-initramfs-dracut && \
+#    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
+#    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
 
 ########################################################################################################################################
