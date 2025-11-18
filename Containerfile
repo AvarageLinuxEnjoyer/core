@@ -220,7 +220,7 @@ application/x-tar=org.kde.ark.desktop\n\
 
 # FIXME A different attempt at fixing file associations once again, revisit this
 # https://www.reddit.com/r/kde/comments/1bd313p/dolphin_not_recognizing_file_associations/
-RUN curl -L https://raw.githubusercontent.com/KDE/plasma-workspace/master/menu/desktop/plasma-applications.menu /etc/xdg/menus/applications.menu
+#RUN curl -L https://raw.githubusercontent.com/KDE/plasma-workspace/master/menu/desktop/plasma-applications.menu /etc/xdg/menus/applications.menu
 
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
