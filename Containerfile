@@ -1,26 +1,52 @@
-#                                            ☆ﾟ.*･｡ﾟ Frankenblue (fork of XeniaOS) ﾟ｡･*.ﾟ☆
-#                                        Arch/CachyOS Bootc | Gaming On Linux | Bazaar | Flatpaks
+#                               			              ☆ﾟ.*･｡ﾟ Frankenblue (fork of XeniaOS) ﾟ｡･*.ﾟ☆
+#                              		          Arch/CachyOS Bootc | Gaming On Linux | Bazaar | Flatpaks
 #                                   
 #   
-#                                             core image - to be used with your own setup! :D
-#                                                    ( somewhat work in progress ) 
+#                              		               core image - to be used with your own setup! :D
+#                              			                      ( somewhat work in progress ) 
 #
 #                                   
-#                                                                 Credits:
+#                   			                                                  Credits:
 #               the talented Xenia Meraki (the transfem package fox) | the wise @tulilirockz (who saved the distro)
-#                                                             the ublue-os team
+#                			                                             the ublue-os team
 #
 
+
 FROM docker.io/cachyos/cachyos-v3:latest
+
+########################################################################################################################################
+# 
+########################################################################################################################################
+
+ENV KERNEL="linux-cachyos"
+
+ENV MY_PACKAGES=" fastfetch micro "
+
+ENV MY_SERVICES=" docker "
+
+
+
+
+
+
+
+
+
+
+
+
+
+########################################################################################################################################
+# 
+########################################################################################################################################
 
 ENV DEV_DEPS="base-devel git rust"
 
 ENV DRACUT_NO_XATTR=1
 
 
-
 ########################################################################################################################################
-# Pre-setup | We do some system maintenance tasks + Set up some things for the rest of the containerfile to go smoothly. ###############
+# 
 ########################################################################################################################################
 
 # Set it up such that pacman will automatically clean package cache after each install
@@ -39,7 +65,7 @@ When = PostTransaction\n\
 Exec = /usr/bin/rm -rf /var/cache/pacman/pkg" | tee /usr/share/libalpm/hooks/package-cleanup.hook
 
 ########################################################################################################################################
-# Package Installs #####################################################################################################################
+# 
 ########################################################################################################################################
 
 # Initialize the database
@@ -48,15 +74,11 @@ RUN pacman -Syu --noconfirm
 # Use the Arch mirrorlist that will be best at the moment for both the containerfile and user too! Fox will help!
 RUN pacman -S --noconfirm reflector
 
+RUN pacman -S --noconfirm ${ KERNEL }
+RUN pacman -S --noconfirm ${ MY_PACKAGES }
+
 # Base packages \ Linux Foundation \ Foss is love, foss is life! We split up packages by category for readability, debug ease, and less dependency trouble
-RUN pacman -S --noconfirm base base-devel dracut linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
-
-
-
-# temp kernel
-#RUN pacman --noconfirm -S linux
-
-
+RUN pacman -S --noconfirm base dracut linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
 
 # Media/Install utilities/Media drivers
 RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
@@ -75,7 +97,7 @@ RUN pacman -S --noconfirm amd-ucode intel-ucode efibootmgr shim mesa lib32-mesa 
 
 # Network / VPN / SMB / storage
 RUN pacman -S --noconfirm libmtp networkmanager-openconnect networkmanager-openvpn nss-mdns samba smbclient networkmanager firewalld udiskie \
-      udisks2 firewalld
+      udisks2 
 
 # Accessibility
 RUN pacman -S --noconfirm espeak-ng orca
@@ -83,36 +105,90 @@ RUN pacman -S --noconfirm espeak-ng orca
 # Pipewire
 RUN pacman -S --noconfirm pipewire pipewire-pulse pipewire-zeroconf pipewire-ffado pipewire-libcamera sof-firmware wireplumber
 
+# Printer
+RUN pacman -S --noconfirm cups cups-browsed hplip
+
+# Desktop Environment needs
+RUN pacman -S --noconfirm greetd xwayland-satellite greetd-tuigreet xdg-desktop-portal-kde xdg-desktop-portal xdg-user-dirs xdg-desktop-portal-gnome \
+      ffmpegthumbs kdegraphics-thumbnailers kdenetwork-filesharing kio-admin chezmoi matugen accountsservice quickshell dgop cliphist cava dolphin \ 
+      qt6ct breeze brightnessctl wlsunset ddcutil xdg-utils
+
+# User frontend programs/apps
+RUN pacman -S --noconfirm steam scx-scheds scx-manager gnome-disk-utility
 
 # Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
 RUN mkdir -p "/usr/share/fonts/Maple Mono" \
       && curl -fSsLo "/tmp/maple.zip" "$(curl "https://api.github.com/repos/subframe7536/maple-font/releases/latest" | jq '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url' -rc)" \
       && unzip "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
+# Add Catppuccin cursor theme
+RUN curl -L \
+    -o /tmp/catppuccin-cursors.zip \
+    https://github.com/catppuccin/cursors/releases/download/v2.0.0/catppuccin-mocha-peach-cursors.zip && \
+    unzip /tmp/catppuccin-cursors.zip -d /usr/share/icons/catppuccin-mocha-peach && \
+    rm /tmp/catppuccin-cursors.zip
 
-# Place logo at plymouth folder location to appear on boot and shutdown.
-#RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
+# Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
+RUN wget -O /usr/share/plymouth/themes/spinner/watermark.png https://raw.githubusercontent.com/XeniaMeraki/XeniaOS-G-Euphoria/refs/heads/main/xeniaos_textlogo_plymouth_delphic_melody.png
 
 RUN echo -ne '[Daemon]\nTheme=spinner' > /etc/plymouth/plymouthd.conf
 
+#######################################################################################################################################################
+# Section 1.5 - Package List | For my info and yours too! No secrets here. | Enjoy your life, and love everyone around you as much as possible ########
+#######################################################################################################################################################
+
+# -Package list- Chaotic-AUR precompiled packages
+# niri-git | input-remapper-git | vesktop | sc-controller | flatpak-git | dms-shell-git | ttf-twemoji |
+# ttf-symbola | opentabletdriver
+
+# Arch apps
+# Dolphin | Chezmoi | Gnome-Disks | Docker | Podman | SCX Manager | Steam
+
+# Flatpaks
+# Bazaar | Krita | Elisa | Pinta | OBS | Ark | Cave Story | Faugus Launcher | ProtonUp-QT | Kdenlive |
+# Okular | Kate | Warehouse | Fedora Media Writer | Gear Lever | Haruna | Space Cadet Pinball | Gwenview
+# Audacity | Filelight | Not Tetris 2 | Floorp
+
 ########################################################################################################################################
-# Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package ############################################
+# Section 2 - Set up bootc dracut | I think it sets up the bootc initial image / Compiles Bootc Package :D #############################
 ########################################################################################################################################
 
 # Workaround due to dracut version bump, please remove eventually
 # FIXME: remove
 RUN printf "systemdsystemconfdir=/etc/systemd/system\nsystemdsystemunitdir=/usr/lib/systemd/system\n" | tee /etc/dracut.conf.d/fix-bootc.conf
 
-#RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
-#    pacman -S --noconfirm base-devel git rust && \
-#    git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
-#    make -C /tmp/bootc bin install-all install-initramfs-dracut && \
-#    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
-#    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
-
+RUN --mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root \
+    pacman -S --noconfirm base-devel git rust && \
+    git clone https://github.com/bootc-dev/bootc.git /tmp/bootc && \
+    make -C /tmp/bootc bin install-all install-initramfs-dracut && \
+    sh -c 'export KERNEL_VERSION="$(basename "$(find /usr/lib/modules -maxdepth 1 -type d | grep -v -E "*.img" | tail -n 1)")" && \
+    dracut --force --no-hostonly --reproducible --zstd --verbose --add ostree --kver "$KERNEL_VERSION"  "/usr/lib/modules/$KERNEL_VERSION/initramfs.img"'
 
 ########################################################################################################################################
-# Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ##########################################
+# Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
+########################################################################################################################################
+
+RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
+
+RUN pacman-key --init && pacman-key --lsign-key 3056513887B78AEB
+
+RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-keyring.pkg.tar.zst' --noconfirm
+
+RUN pacman -U 'https://cdn-mirror.chaotic.cx/chaotic-aur/chaotic-mirrorlist.pkg.tar.zst' --noconfirm
+
+RUN echo -e '[chaotic-aur]\nInclude = /etc/pacman.d/chaotic-mirrorlist' >> /etc/pacman.conf
+
+RUN pacman -Sy --noconfirm
+
+RUN pacman -S \
+      chaotic-aur/niri-git chaotic-aur/input-remapper-git chaotic-aur/vesktop-git chaotic-aur/sc-controller chaotic-aur/flatpak-git \
+      chaotic-aur/dms-shell-git chaotic-aur/ttf-twemoji chaotic-aur/ttf-symbola chaotic-aur/opentabletdriver \
+      --noconfirm
+
+RUN systemctl enable greetd
+
+########################################################################################################################################
+# Section 4 Flatpaks preinstalls | We love containers, flatpaks, and protecting installs from breaking! ################################
 ########################################################################################################################################
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
@@ -120,6 +196,71 @@ RUN mkdir -p /usr/share/flatpak/preinstall.d/
 # Bazaar
 RUN printf "[Flatpak Preinstall io.github.kolunmi.Bazaar]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Bazaar.preinstall
 
+# Krita
+RUN printf "[Flatpak Preinstall org.kde.krita]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Krita.preinstall
+
+# Elisa
+RUN printf "[Flatpak Preinstall org.kde.elisa]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Elisa.preinstall
+
+# Pinta | Image editing! They set out a bit to match paint.net/paintdotnet
+RUN printf "[Flatpak Preinstall com.github.PintaProject.Pinta]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinta.preinstall
+
+# OBS | Video recording/streaming!
+RUN printf "[Flatpak Preinstall com.obsproject.Studio]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/OBS.preinstall
+
+# OBSVKCapture | Games capture in OBS scenes on linux!
+RUN printf "[Flatpak Preinstall com.obsproject.Studio.Plugin.OBSVkCapture]\nBranch=stable\nIsRuntime=true" > /usr/share/flatpak/preinstall.d/OBSVKCapture.preinstall
+
+# Ark | For unzipping files and file compression! (Imagine a fox whose face you may squish...)
+RUN printf "[Flatpak Preinstall org.kde.ark]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Ark.preinstall
+
+# Cave Story, a free, public domain platformer! It"s historically important to videogames and platformers as a genre.
+RUN printf "[Flatpak Preinstall com.gitlab.coringao.cavestory-nx]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/CaveStory.preinstall
+
+# Faugus Launcher | This is fantastic for using windows software on linux, exes and whatnot
+RUN printf "[Flatpak Preinstall io.github.faugus.faugus-launcher]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/FaugusLauncher.preinstall
+
+# ProtonUp-Qt | For installing different versions of proton! Emulation for windows games via Steam/Valve's work
+RUN printf "[Flatpak Preinstall net.davidotek.pupgui2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/ProtonUp-Qt.preinstall
+
+# Kdenlive | Video editing!
+RUN printf "[Flatpak Preinstall org.kde.kdenlive]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Kdenlive.preinstall
+
+# Okular | Viewing pdfs~
+RUN printf "[Flatpak Preinstall org.kde.okular]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Okular.preinstall
+
+# Kate | Writing documents~ Also can act as an IDE/development environment interestingly!
+RUN printf "[Flatpak Preinstall org.kde.kate]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Kate.preinstall
+
+# Warehouse | Manage your flatpak apps, delete whatever you don"t need/use/want! It's YOUR computer.
+RUN printf "[Flatpak Preinstall io.github.flattool.Warehouse]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Warehouse.preinstall
+
+# Fedora Media Writer | Burn ISOs to usb sticks! Install linux on ALL the things. (This won"t work for Windows ISOs, cuz Microsoft is dumb) >:c
+RUN printf "[Flatpak Preinstall org.fedoraproject.MediaWriter]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/FedoraMediaWriter.preinstall
+
+# Gear Lever | Manage appimages!
+RUN printf "[Flatpak Preinstall it.mijorus.gearlever]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/GearLever.preinstall
+
+# Haruna | Watch video files! I actually personally like this better than VLC Media Player, nicer look/featureset
+RUN printf "[Flatpak Preinstall org.kde.haruna]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Haruna.preinstall
+
+# Pinball | It's important. Shakes you. I need you to understand I NEED this and need to put this on your computer.
+RUN printf "[Flatpak Preinstall com.github.k4zmu2a.spacecadetpinball]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Pinball.preinstall
+
+# Gwenview | View images!
+RUN printf "[Flatpak Preinstall org.kde.gwenview]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Gwenview.preinstall
+
+# Audacity | Edit audio! We love Audacity~ Wonderful software.
+RUN printf "[Flatpak Preinstall org.audacityteam.Audacity]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Audacity.preinstall
+
+# Filelight | Check what's taking up space on your drives~
+RUN printf "[Flatpak Preinstall org.kde.filelight]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Filelight.preinstall
+
+# Not Tetris 2 | DEFINITELY not Tetris... 2!!!
+RUN printf "[Flatpak Preinstall net.stabyourself.nottetris2]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/NotTetris2.preinstall
+
+# Floorp | A very nicely fast and very nicely featured Firefox fork! A fellow fox!!
+RUN printf "[Flatpak Preinstall one.ablaze.floorp]\nBranch=stable\nIsRuntime=false" > /usr/share/flatpak/preinstall.d/Floorp.preinstall
 
 # Systemd flatpak preinstall service, thanks Zirconium
 RUN echo -ne '[Unit]\n\
@@ -148,23 +289,23 @@ WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
 RUN systemctl enable flatpak-preinstall.service
 
 ########################################################################################################################################
-# Linux OS stuff | We set some nice defaults ###########################################################################################
+# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo #####################
 ########################################################################################################################################
 
 # Add user to sudoers file for sudo, enable polkit
 RUN echo "%wheel      ALL=(ALL:ALL) ALL" | tee -a /etc/sudoers
 RUN systemctl enable polkit
 
-# Set up zram, this will help users not run out of memory.
+# Set up zram, this will help users not run out of memory. Fox will fix!
 RUN echo -ne '[zram0]\nzram-size = min(ram, 8192)' >> /usr/lib/systemd/zram-generator.conf
 RUN echo -ne 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/91-resolved-default.preset
 RUN echo -ne 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
-# Enable wifi, firewall, power profiles.
-RUN systemctl enable NetworkManager firewalld
+# Enable wifi, firewall, power profiles. Fox will protect!
+RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
-# OS Release and Update
+# OS Release and Update uwu
 RUN echo -ne 'NAME="XeniaOS"\n\
 PRETTY_NAME="XeniaOS"\n\
 ID=arch\n\
@@ -187,6 +328,20 @@ RestartSec=1 \n\
 \n\
 [Install] \n\
 WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/udiskie.service
+
+# Clip history / Cliphist systemd service / Clipboard history for copy and pasting to work properly in Niri~
+RUN echo -ne '[Unit]\n\
+Description=Clipboard History service\n\
+PartOf=graphical-session.target\n\
+After=graphical-session.target\n\
+\n\
+[Service]\n\
+ExecStart=wl-paste --watch cliphist store\n\
+Restart=on-failure\n\
+RestartSec=1\n\
+\n\
+[Install]\n\
+WantedBy=graphical-session.target' > /usr/lib/systemd/user/cliphist.service
 
 # Symlink Vi to Vim / Make it to where a user can use vi in terminal command to use vim automatically | Thanks Tulip
 RUN ln -s ./vim /usr/bin/vi
@@ -218,10 +373,6 @@ application/x-tar=org.kde.ark.desktop\n\
 \n\
 [Added Associations]' > /etc/xdg/mimeapps.list
 
-# FIXME A different attempt at fixing file associations once again, revisit this
-# https://www.reddit.com/r/kde/comments/1bd313p/dolphin_not_recognizing_file_associations/
-#RUN curl -L https://raw.githubusercontent.com/KDE/plasma-workspace/master/menu/desktop/plasma-applications.menu /etc/xdg/menus/applications.menu
-
 # ENV default exports, QT theming 
 # Load shared objects immediately for better first time latency
 # Apply OBS_VK to all vulkan instances for better OBS game capture, some other windows may come along for the ride
@@ -240,7 +391,7 @@ RUN echo -ne 'ENV{ID_FS_USAGE}=="filesystem|other|crypto", ENV{UDISKS_FILESYSTEM
 RUN echo -ne 'D /media 0755 root root 0 -' > /etc/tmpfiles.d/media.conf
 
 ########################################################################################################################################
-# CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use #####################################################
+# Section 6 - CachyOS settings | Since we have the CachyOS kernel, we gotta put it to good use ≽^•⩊•^≼ ################################
 ########################################################################################################################################
 
 # Activate NTSync, wags my tail in your general direction
@@ -250,13 +401,104 @@ RUN echo 'ntsync' > /etc/modules-load.d/ntsync.conf
 RUN echo -ne 'net.core.default_qdisc=fq \n\
 net.ipv4.tcp_congestion_control=bbr\n' > /etc/sysctl.d/99-bbr3.conf
 
+########################################################################################################################################
+# Section 7 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
+########################################################################################################################################
+
+# Add config for dolphin to Niri and switch away from GTK/Nautilus, use Dolphin for file chooser.
+RUN echo -ne '[preferred] \n\
+default=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.ScreenCast=gnome;kde;gtk; \n\
+org.freedesktop.impl.portal.Access=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.Notification=kde;gtk;gnome; \n\
+org.freedesktop.impl.portal.Secret=gnome-keyring' > /usr/share/xdg-desktop-portal/niri-portals.conf
+
+# Use Chezmoi to set up config files, visual assets, avatars, and wallpapers
+RUN mkdir -p /usr/share/xeniaos/ && \
+      git clone https://github.com/XeniaMeraki/XeniaOS-HRT /usr/share/xeniaos/zdots
+
+RUN mkdir -p /usr/share/xeniaos/ && \
+      git clone https://github.com/XeniaMeraki/XeniaOS-G-Euphoria /usr/share/xeniaos/wallpapers
+
+#Starship setup
+RUN echo 'eval "$(starship init bash)"' >> /etc/bash.bashrc
+
+# DMS Service Systemd Service
+RUN echo -ne '[Unit]\n\
+Description=Shell Service\n\
+PartOf=graphical-session.target\n\
+After=graphical-session.target\n\
+\n\
+[Service]\n\
+ExecStart=dms run\n\
+Restart=on-failure\n\
+RestartSec=1\n\
+\n\
+[Install]\n\
+WantedBy=graphical-session.target\n' > /usr/lib/systemd/user/dms.service
+
+# Starts with Niri Session - Services for User Interaction
+RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=udiskie.service/" "/usr/lib/systemd/user/niri.service"
+RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=plasma-xdg-desktop-portal-kde.service/" "/usr/lib/systemd/user/niri.service"
+RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=dms.service/" "/usr/lib/systemd/user/niri.service"
+RUN sed -i "s/\[Unit\]/\[Unit\]\nWants=cliphist.service/" "/usr/lib/systemd/user/niri.service"
+
+RUN echo -ne '[Unit]\n\
+Description=Initializes Chezmoi if directory is missing\n\
+ConditionPathExists=!%h/.config/xeniaos/chezmoi\n\
+\n\
+[Service]\n\
+ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
+ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
+ExecStart=chezmoi apply -S /usr/share/xeniaos/zdots --config %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
+Type=oneshot\n\
+\n\
+[Install]\n\
+WantedBy=default.target\n' >> /usr/lib/systemd/user/chezmoi-init.service
+
+RUN echo -ne "[Unit]\n\
+Description=Chezmoi Update\n\
+\n\
+[Service]\n\
+ExecStart=mkdir -p %h/.config/xeniaos/chezmoi\n\
+ExecStart=touch %h/.config/xeniaos/chezmoi/chezmoi.toml\n\
+ExecStart=sh -c 'yes s | chezmoi apply --no-tty --keep-going -S /usr/share/xeniaos/zdots --verbose --config %h/.config/xeniaos/chezmoi/chezmoi.toml'\n\
+Type=oneshot\n" >> /usr/lib/systemd/user/chezmoi-update.service
+
+RUN echo -ne '[Unit]\n\
+Description=Timer for Chezmoi Update\n\
+# This service will only execute for a user with an existing chezmoi directory\n\
+ConditionPathExists=%h/.config/xeniaos/chezmoi\n\
+\n\
+[Timer]\n\
+OnBootSec=5m\n\
+OnUnitInactiveSec=1d\n\
+\n\
+[Install]\n\
+WantedBy=timers.target\n' >> /usr/lib/systemd/user/chezmoi-update.timer
+
+# Greetd Setup - Login Manager
+RUN echo 'u     greetd -     "greetd daemon" /var/lib/greetd' > /usr/lib/sysusers.d/greetd.conf
+RUN echo 'Z  /var/lib/greetd -    greetd greetd -   -' > /usr/lib/tmpfiles.d/greetd.conf
+
+# Login tui setup
+RUN echo -ne '[terminal]\n\
+vt = 1\n\
+\n\
+[default_session]\n\
+command = "tuigreet --time --user-menu --remember --remember-session --asterisks --power-no-setsid --width 140 --theme border=orange;text=orange;prompt=orange;time=orange;action=orange;button=orange;container=gray;input=orange --cmd niri-session"\n\
+user = "greetd"' > /etc/greetd/config.toml
+
+RUN systemctl enable --global chezmoi-init.service chezmoi-update.timer
+
+RUN systemctl enable --global dms.service
 
 ########################################################################################################################################
-# Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew ###################################
+# Section 8 - Final Bootc Setup. The horrors are endless. but we stay silly :3c -junoinfernal -maia arson crimew #######################
 ########################################################################################################################################
 
-# This fixes a user/groups error with Arch Bootc setup.
-# FIXME Do NOT remove until fixed upstream. Script created by Tulip.
+#This fixes a user/groups error with Arch Bootc setup.
+#Do NOT remove until fixed upstream. Script created by Tulip.
 
 RUN mkdir -p /usr/lib/systemd/system-preset /usr/lib/systemd/system
 
@@ -272,7 +514,7 @@ ExecStart=/usr/libexec/xeniaos-group-fix /etc/group\n\
 ExecStart=/usr/libexec/xeniaos-group-fix /etc/gshadow\n\
 ExecStart=systemd-sysusers\n\
 [Install]\n\
-WantedBy=default.target multi-user.target\n' > /usr/lib/systemd/eniaos-group-fix.service
+WantedBy=default.target multi-user.target\n' > /usr/lib/systemd/system/xeniaos-group-fix.service
 
 RUN echo "enable xeniaos-group-fix.service" > /usr/lib/systemd/system-preset/01-xeniaos-group-fix.preset
 RUN systemctl enable xeniaos-group-fix.service
@@ -290,11 +532,16 @@ RUN sed -i 's|^HOME=.*|HOME=/var/home|' "/etc/default/useradd" && \
     echo "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf && \
     printf "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true\n" | tee "/usr/lib/ostree/prepare-root.conf"
 
+RUN systemctl enable ${ MY_SERVICES }
+
 RUN bootc container lint
 
 #
 #
 # # TODO: 
+
+# finish slimming down the image
+
 # make it as slim as possible - to use as basis for other images
 # add back the index
 # remove existing silly text
