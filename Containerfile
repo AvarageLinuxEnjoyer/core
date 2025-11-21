@@ -1,14 +1,4 @@
-#                               			              ☆ﾟ.*･｡ﾟ Frankenblue (fork of XeniaOS) ﾟ｡･*.ﾟ☆
-#                              		          Arch/CachyOS Bootc | Gaming On Linux | Bazaar | Flatpaks
-#                                   
-#   
-#                              		               core image - to be used with your own setup! :D
-#                              			                      ( somewhat work in progress ) 
-#
-#                                   
-#                   			                                                  Credits:
-#               the talented Xenia Meraki (the transfem package fox) | the wise @tulilirockz (who saved the distro)
-#                			                                             the ublue-os team
+
 #
 
 
