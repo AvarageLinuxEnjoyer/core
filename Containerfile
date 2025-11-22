@@ -105,7 +105,7 @@ RUN echo -e 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf'
 RUN systemctl preset systemd-resolved.service
 
 # Enable wifi, firewall, power profiles.
-RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
+RUN systemctl enable NetworkManager firewalld
 
 # OS Release and Update
 #RUN echo -e 'NAME="XeniaOS"\n\
