@@ -103,8 +103,8 @@ RUN echo -e 'enable systemd-resolved.service' >> usr/lib/systemd/system-preset/9
 RUN echo -e 'L /etc/resolv.conf - - - - ../run/systemd/resolve/stub-resolv.conf' >> /usr/lib/tmpfiles.d/resolved-default.conf
 RUN systemctl preset systemd-resolved.service
 
-# Enable wifi, firewall, power profiles. Fox will protect!
-RUN systemctl enable NetworkManager firewalld
+# Enable wifi, firewall, power profiles.
+RUN systemctl enable NetworkManager tuned tuned-ppd firewalld
 
 # OS Release and Update
 #RUN echo -e 'NAME="XeniaOS"\n\
