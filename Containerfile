@@ -14,7 +14,7 @@ RUN pacman -S --noconfirm reflector
 
 # Base packages \ Linux Foundation, We split up packages by category for readability, debug ease, and less dependency trouble
 RUN pacman -S --noconfirm base dracut linux-firmware ostree systemd btrfs-progs e2fsprogs xfsprogs binutils dosfstools skopeo dbus dbus-glib glib2 shadow
-RUN pacman -S --noconfirm base-devel git rust
+RUN pacman -S --noconfirm base-devel #git rust
 
 # Media/Install utilities/Media drivers
 RUN pacman -S --noconfirm librsvg libglvnd qt6-multimedia-ffmpeg plymouth acpid ddcutil dmidecode mesa-utils ntfs-3g \
