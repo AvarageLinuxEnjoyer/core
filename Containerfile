@@ -244,7 +244,7 @@ RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
 ########################################################################################################################################
 
 
-ENV BOOTC_INIT="--mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root  ; 
+ENV BOOTC_INIT="[--mount=type=tmpfs,dst=/tmp --mount=type=tmpfs,dst=/root  ; 
 pacman -S --noconfirm base-devel git rust &&
 git clone "https://github.com/bootc-dev/bootc.git" /tmp/bootc &&
 make -C /tmp/bootc bin install-all &&
@@ -287,5 +287,4 @@ ln -s sysroot/ostree /ostree &&
 echo -e "$(for dir in opt usrlocal home srv mnt ; do echo -e "d /var/$dir 0755 root root -" ; done)" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf &&
 echo -e "d /var/roothome 0700 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf &&
 echo -e "d /run/media 0755 root root -" | tee -a /usr/lib/tmpfiles.d/bootc-base-dirs.conf &&
-echo -e "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true" | tee "/usr/lib/ostree/prepare-root.conf"
- "
+echo -e "[composefs]\nenabled = yes\n[sysroot]\nreadonly = true" | tee "/usr/lib/ostree/prepare-root.conf"]"
