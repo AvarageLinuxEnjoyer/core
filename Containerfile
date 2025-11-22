@@ -32,7 +32,7 @@ RUN pacman -S --noconfirm steam gamescope scx-scheds scx-manager gnome-disk-util
 RUN pacman -S --clean
 
 ########################################################################################################################################
-# Section 3 - Chaotic AUR # We grab some precompiled packages from the Chaotic AUR for things not on Arch repos/better updated~ ovo ####
+# 
 ########################################################################################################################################
 
 RUN pacman-key --recv-key 3056513887B78AEB --keyserver keyserver.ubuntu.com
@@ -52,7 +52,7 @@ RUN pacman -S \
       --noconfirm
 
 ########################################################################################################################################
-# Section 4 - Flatpaks preinstalls | Don't forget. Always, somewhere, someone is fighting for you. You are not alone. ##################
+# 
 ########################################################################################################################################
 
 RUN mkdir -p /usr/share/flatpak/preinstall.d/
@@ -84,7 +84,7 @@ WantedBy=multi-user.target' > /usr/lib/systemd/system/flatpak-preinstall.service
 RUN systemctl enable flatpak-preinstall.service
 
 ########################################################################################################################################
-# Section 5 - Linux OS stuffs | We set some nice defaults for a regular user + set up a few XeniaOS details owo ########################
+# 
 ########################################################################################################################################
 
 # Place XeniaOS logo at plymouth folder location to appear on boot and shutdown.
@@ -226,13 +226,8 @@ RUN echo -e 'net.core.default_qdisc=fq \n\
 net.ipv4.tcp_congestion_control=bbr' > /etc/sysctl.d/99-bbr3.conf
 
 ########################################################################################################################################
-# Section 7 - Niri/Chezmoi/DMS | Everything to do with the desktop/visual look of your taskbar/ config files (⸝⸝>w<⸝⸝) #################
+# 
 ########################################################################################################################################
-
-# Add Maple Mono font, it's so cute! It's a pain to download! You'll love it.
-RUN mkdir -p "/usr/share/fonts/Maple Mono" && \
-    curl --retry 5 --retry-all-errors -fSsLo "/tmp/maple.zip" "$(curl -s https://api.github.com/repos/subframe7536/maple-font/releases/latest | jq -r -c '.assets[] | select(.name == "MapleMono-Variable.zip") | .browser_download_url')" && \
-    unzip -q "/tmp/maple.zip" -d "/usr/share/fonts/Maple Mono"
 
 #Starship setup
 RUN echo -e 'eval "$(starship init bash)"' >> /etc/bash.bashrc
